@@ -2,7 +2,6 @@
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <locale.h>
 #include <ctype.h>
 
@@ -10,10 +9,11 @@ typedef struct {
     char email[50], senha[20], cpf[12]; 
 } Usuario;
 
-void getPassword(char *password, int maxLen) {
+
+//ocultar senha
+void getPassword(char *password, int maxLen) { 
     int i = 0;
     char c;
-
     while (1) {
         c = getch();
 
@@ -31,6 +31,8 @@ void getPassword(char *password, int maxLen) {
     password[i] = '\0';
 }
 
+
+//CPF com 11 caracteres validar
 int validarCPF(const char *cpf) {
     if (strlen(cpf) != 11) {
         return 0;
@@ -41,8 +43,10 @@ int validarCPF(const char *cpf) {
         }
     }
     return 1;
-    
 }
+
+
+//Senha com 7 caracteres validar
 int validarSenha(const char *senhaTemp) {
     if (strlen(senhaTemp) < 6) {
         return 0;
@@ -53,8 +57,9 @@ int validarSenha(const char *senhaTemp) {
         }
     }
     return 1;
+    
+    
 }
-
 
 int main() {
 	
@@ -112,7 +117,7 @@ int main() {
                 if (strcmp(senhaTemp, confirmacaoSenha) == 0) {
                     strcpy(usuarios[totalUsuarios].senha, senhaTemp);
                     totalUsuarios++;
-                    printf("\n--------------------------");
+                    printf("\n\n--------------------------");
                     printf("\nConta criada com sucesso!\n");
                     printf("--------------------------\n");
                 } else {
@@ -129,7 +134,7 @@ int main() {
                 for (int i = 0; i < totalUsuarios; ++i) {
                     if (strcmp(email, usuarios[i].email) == 0 && strcmp(senha, usuarios[i].senha) == 0) {
                         logado = 1;
-                        printf("\n--------------------------");
+                        printf("\n\n--------------------------");
                         printf("\nLogin bem-sucedido!\n");
                         printf("--------------------------\n");
                         break;
@@ -162,6 +167,7 @@ int main() {
     switch(escolha) {
             break;
             case 4:
+            	int i;
             	printf("Paga meia? \n");
         	printf("1. Sim \n");
         	printf("2. Não \n");
@@ -176,17 +182,28 @@ int main() {
                 printf("--------------------------");
                 printf("\nTotal a pagar: R$%.2f\n", total);
                 printf("--------------------------\n");
+                printf("Forma de Pagamento:\n\n");
+                printf("1. PIX \n");
+                printf("2. BOLETO BANCÁRIO\n");
+                scanf("%d", &i);
+                //PROSSEGUIR COM O PAGAMENTO
             }
 			}
 			else{
-			
             printf("Quantos ingressos inteiros voce deseja comprar? ");
             scanf("%d", &quantidade);
             if (quantidade <= 0) {
                 printf("Quantidade inválida.\n");
             } else {
                 float total = preco * quantidade;
-                printf("Total a pagar: R$%.2f\n", total);
+                printf("--------------------------");
+                printf("\nTotal a pagar: R$%.2f\n", total);
+                printf("--------------------------\n");
+                printf("Forma de Pagamento:\n\n");
+                printf("1. PIX \n");
+                printf("2. BOLETO BANCÁRIO\n");
+                scanf("%d", &i);
+                //PROSSEGUIR COM O PAGAMENTO
             }
         }
             break;
@@ -196,9 +213,6 @@ int main() {
         default:
             printf("Opcao invalida.\n");
     }
-    printf("Forma de Pagamento\n\n:");
-                printf("1. PIX \n");
-                printf("2. BOLETO BANCÁRIO");
                 } else {
                     printf("\nVocê precisa estar logado para comprar ingressos.\n");
                 }
@@ -210,6 +224,6 @@ int main() {
                 printf("\nOpcao invalida. Tente novamente.\n");
         }
     } while(opcao != 4);
-
+    
     return 0;
 }
