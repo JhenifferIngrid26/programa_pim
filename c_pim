@@ -6,26 +6,25 @@
 #include <ctype.h>
 #include <time.h>
 
-
 /*Um pequeno "Banco de dados" Dentro do código para ARMAZENAR
 os dados do Usuário. A typedef nesse bloco de código cria um alias
 (um nome alternativo) para a estrutura (struct) anônima
 Neste caso, o alias é Usuario.
 */
 typedef struct {
-    char email[50], senha[20], cpf[12];
+    char email[50], senha[20], cpf[12]; 
 } Usuario;
 
 
 //Ocultar senha
-void getPassword(char *password, int maxLen) {
+void getPassword(char *password, int maxLen) { 
     int i = 0;
     char c;
     while (1) {
         c = getch();
-        if (c == '\r') {
+        if (c == '\r') { 
             break;
-        } else if (c == '\b' && i > 0) {
+        } else if (c == '\b' && i > 0) { 
             printf("\b \b");
             i--;
         } else if (i < maxLen - 1) {
@@ -64,13 +63,12 @@ int validarSenha(const char *senhaTemp) {
     }
     return 1;
 }
-
-
-int main() {
-    //Permite o código a imprimir acentos e outras peripecias da linguagem portuguesa
-    setlocale(LC_ALL,"Portuguese");
     
-    //DECLARAÇÃO DE VARIÁVEIS
+int main() {
+	//Permite o código a imprimir acentos e outras peripecias da linguagem portuguesa
+	setlocale(LC_ALL,"Portuguese");
+
+	//DECLARAÇÃO DE VARIÁVEIS
     Usuario usuarios[100];
     int totalUsuarios = 0;
     int opcao;
@@ -81,9 +79,10 @@ int main() {
     char senha[20];
     int logado = 0;
     int i, ticket;
+    
 
-
-   do {
+    do { //LOOP MAIS IMPORTANTE, ONDE O USUÁRIO SERÁ DIRECIONADO NA MAIORIA DOS FINAIS DE TOMADAS DE DECISÃO
+    
         printf("\nBEM VINDO(A) AO SITE DO MUSEU!\n");
         printf("==============================\n\n");
         printf("MENU\n\n");
@@ -94,8 +93,7 @@ int main() {
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
 
-
-       switch(opcao) {
+        switch(opcao) {
         case 1:
         //ENTRADA DE DADOS PARA CADASTRO
         system("cls");
@@ -109,15 +107,17 @@ int main() {
         printf("\nDigite seu email: ");
         scanf("%s", usuarios[totalUsuarios].email);
         
+        
+        
         //Entrada e Conferir se o CPF possui 11 caracteres, caso não tenha irá se repetir
             do {
                 printf("\nDigite seu CPF: ");
                 scanf("%s", cpf);
-                }
-                while (!validarCPF(cpf));
+                } 
+				while (!validarCPF(cpf));
                 strcpy(usuarios[totalUsuarios].cpf, cpf);
                 
-                //Entrada e Conferir se a senha possui 7 caracteres numéricos
+                //Entrada e Conferir se a senha possui 7 caracteres numéricos, caso não tenha irá se repetir
                 char senhaTemp[20];
                 do {
                     printf("\nDigite sua senha utilizando apenas números (minimo 7 dígitos):");
@@ -129,8 +129,7 @@ int main() {
                 printf("\nConfirme sua senha: ");
                 getPassword(confirmacaoSenha, sizeof(confirmacaoSenha));
 
-
-               if (strcmp(senhaTemp, confirmacaoSenha) == 0) {
+                if (strcmp(senhaTemp, confirmacaoSenha) == 0) {
                     strcpy(usuarios[totalUsuarios].senha, senhaTemp);
                     totalUsuarios++;
                     printf("\n\n--------------------------");
@@ -139,7 +138,11 @@ int main() {
                     system("pause");
                     system("cls");
                 } else {
-                    printf("\nAs senhas nao coincidem. Tente novamente.\n");
+                    printf("\n\nAs senhas nao coincidem!\n");
+                    printf("volte ao cadastro e tente novamente.\n\n");
+                    system("pause");
+                    system("cls");
+                    break;
                 }
                 break;
             
@@ -153,9 +156,8 @@ int main() {
         scanf("%s", email);
         printf("Digite sua senha: ");
         getPassword(senha, sizeof(senha));
-
-
-           for (int i = 0; i < totalUsuarios; ++i) {
+                            // VERIFICA SE O USUÁRIO ESTÁ CADASTRADO (SE OS DADOS ESTÃO NO SISTEMA)
+            for (int i = 0; i < totalUsuarios; ++i) {
                 if (strcmp(email, usuarios[i].email) == 0 && strcmp(senha, usuarios[i].senha) == 0) {
                     logado = 1;
                     printf("\n\n--------------------------");
@@ -166,6 +168,7 @@ int main() {
                     break;
                     }
                 }
+                // ERRO NO LOGIN (DADOS INEXISTENTES, ERRO NA SENHA OU EMAIL)
             if (!logado) {
                 printf("\n\nEmail ou senha incorretos!\n");
                 printf("\nSelecione a opção LOGIN para tentar novamente.\n\n\n");
@@ -174,9 +177,11 @@ int main() {
                 }
                 break;
         case 3:
-        if (logado){
+        if (logado){ //SE o login for bem sucedido, essa área poderá ser acessada
+        	
         //Entrada de dados para a escolha da exposição, quantos ingressos comprar e declaração dos preços
-        int escolha;
+        
+	    int escolha;
         int escolha2;
         float preco = 30.00;
         float meia = 15.00;
@@ -187,7 +192,9 @@ int main() {
     printf("COMPRA DE INGRESSOS\n");
     printf("====================\n\n");
     printf("Ingresso: R$%.2f\n", preco);
+    printf("Limite de 10 ingressos por usuário!\n");
     printf("Meia entrada: R$%.2f \n\n\n", meia);
+    
     printf("1. Comprar ingresso para 100 anos da semana de arte moderna\n\n");
     printf("2. Comprar ingresso para 150 anos de Santos Dumont\n\n");
     printf("3. Comprar ingresso para Jogos olímpicos Paris 2024\n\n");
@@ -196,22 +203,28 @@ int main() {
     printf("Escolha uma opção:\n");
     scanf("%d", &escolha);
 
-
-   switch(escolha) {
+    switch(escolha) {
             break;
             case 4:
             int i;
+            char dia[5];
+            int hora;
             printf("\nPaga meia? \n\n");
-            printf("1. Sim \n\n");
-            printf("2. Não \n");
-            scanf("%d", &escolha2);
-            if(escolha2==1){ //PROSSEGUIR COM O PAGAMENTE ENTRADA MEIA
-            printf("Quantos ingressos meia entrada você deseja comprar?\n");
+        	printf("1. Sim \n\n");
+        	printf("2. Não \n");
+        	scanf("%d", &escolha2);
+        	if(escolha2==1){ 
+            printf("\nDigite o dia que gostaria de assistir a exposição.  Exemplo 11/10\n");
+            scanf("%s", &dia);
+            printf("\nDigite o horario da sua exposição entre as opções disponiveis\n 10h - 12h - 14h - 16h - 18h - 20h\n");
+            scanf("%d", &hora);
+            printf("\nQuantos ingressos meia entrada você deseja comprar?\n");
             scanf("%d", &quantidade);
             if (quantidade <= 0) {
                 printf("Quantidade inválida.\n");
-            }
-            else {
+            } 
+            // 	PAGAMENTO MEIA ENTRADA
+			else {
             float total = meia * quantidade;
             printf("--------------------------");
             printf("\nTotal a pagar: R$%.2f\n", total);
@@ -222,85 +235,137 @@ int main() {
             scanf("%d", &i);
             
             if(i=1){
-                system("cls");
-                printf("---------------------------------------------------\n\n");
-                printf("COMPRA CONCLUÍDA.\n\n");
-                printf("---------------------------------------------------\n\n");
-                printf("Nome: %s \n",nome);
-                printf("CPF: %s \n\n", cpf);
-                printf("---------------------------------------------------\n\n");
-                printf("Exposição: REI PELÉ\n\n");
-                printf("---------------------------------------------------\n\n");
-                printf("Preço:R$%.2f\n",total);
-                printf("Método de pagamento: PIX\n\n");
-                printf("---------------------------------------------------\n\n");
-                
-                srand(time(NULL));
-                ticket = rand() % (999999 - 100000 + 1) + 100000;
-                printf("Ticket: %d\n\n", ticket);
-                printf("---------------------------------------------------\n\n");
-                system("pause");
-                system("cls");
-                break;
-            }
-            else if(i=2){
-                system("cls");
-                printf("---------------------------------------------------\n\n");
-                printf("COMPRA CONCLUÍDA.\n\n");
-                printf("---------------------------------------------------\n\n");
-                printf("Nome: %s \n",nome);
-                printf("CPF: %s \n\n", cpf);
-                printf("---------------------------------------------------\n\n");
-                printf("Exposição: REI PELÉ\n\n");
-                printf("---------------------------------------------------\n\n");
-                printf("Preço:R$%.2f\n",total);
-                printf("Método de pagamento: Cartão de crédito/débito\n\n");
-                printf("---------------------------------------------------\n\n");
-                
-                srand(time(NULL));
-                ticket = rand() % (999999 - 100000 + 1) + 100000;
-                printf("Ticket: %d\n\n", ticket);
-                printf("---------------------------------------------------\n\n");
-                system("pause");
-                system("cls");
-            }
-            else{
-                printf("Opção inválida!");
-            }
+            	system("cls");
+            	printf("---------------------------------------------------\n\n");
+            	printf("COMPRA CONCLUÍDA.\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Nome: %s \n",nome);
+            	printf("CPF: %s \n\n", cpf);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Exposição: REI PELÉ\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Dia %s - Horario %dh\n\n", dia, hora);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Preço:R$%.2f\n",total);
+            	printf("Método de pagamento: PIX\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	
+            	for (int i = 0; i<quantidade;i++){
+                int randomNumber = rand() % 900000 + 100000;
+                printf("Ticket %d: %d\n\n", i + 1, randomNumber);
+                }
+
+            	printf("---------------------------------------------------\n\n");
+            	system("pause");
+            	system("cls");
+            	break; // Volta ao menu
+			}
+			else if(i=2){
+				system("cls");
+				printf("---------------------------------------------------\n\n");
+            	printf("COMPRA CONCLUÍDA.\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Nome: %s \n",nome);
+            	printf("CPF: %s \n\n", cpf);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Exposição: REI PELÉ\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Dia %s - Horario %dh\n\n", dia, hora);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Preço:R$%.2f\n",total);
+            	printf("Método de pagamento: Cartão de crédito/débito\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	
+            	for (int i = 0; i<quantidade;i++){
+                int randomNumber = rand() % 900000 + 100000;
+                printf("Ticket %d: %d\n\n", i + 1, randomNumber);
+                }
+            	printf("---------------------------------------------------\n\n");
+				system("pause");
+				system("cls");
+				break; // Volta ao menu
+			}
+			else{
+				printf("Opção inválida!");
+			}
             return 0;
             }
                 
-                
-            }
-            else{
-            printf("Quantos ingressos inteiros você deseja comprar?");
+                // PAGAMENTO ENTRADA INTEIRA
+			}
+			else{
+			printf("\nDigite o dia que gostaria de assistir a exposição.  Exemplo 11/10\n");
+            scanf("%s", &dia);
+            printf("\nDigite o horario da sua exposição entre as opções disponiveis\n 10h - 12h - 14h - 16h - 18h - 20h\n");
+            scanf("%d", &hora);
+            printf("\nQuantos ingressos inteiros você deseja comprar?");
             scanf("%d", &quantidade);
             if (quantidade <= 0) {
                 printf("Quantidade inválida.\n");
-            } else { //PROSSEGUIR COM O PAGAMENTO ENTRADA INTEIRA
+            } else { 
                 float total = preco * quantidade;
                 printf("--------------------------");
                 printf("\nTotal a pagar: R$%.2f\n", total);
                 printf("--------------------------\n");
                 printf("Forma de Pagamento:\n\n");
                 printf("1. PIX \n");
-                printf("2. BOLETO BANCÁRIO\n");
+                printf("2. CARTÃO DE CRÉDITO/DÉBITO\n");
                 scanf("%d", &i);
                 if(i=1){
-                system("cls");
-                printf("Pix");
-                system("pause");
-            }
-            else if(i=2){
-                system("cls");
-                printf("Cartão de crédito/débito");
-                system("pause");
-            }
-            else{
-                printf("Opção inválida!");
-            }
-            return 0;
-                
+            	system("cls");
+            	printf("---------------------------------------------------\n\n");
+            	printf("COMPRA CONCLUÍDA.\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Nome: %s \n",nome);
+            	printf("CPF: %s \n\n", cpf);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Exposição: REI PELÉ\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Dia %s - Horario %dh\n\n", dia, hora);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Preço:R$%.2f\n",total);
+            	printf("Método de pagamento: PIX\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	
+            	for (int i = 0; i<quantidade;i++){
+                int randomNumber = rand() % 900000 + 100000;
+                printf("Ticket %d: %d\n\n", i + 1, randomNumber);
+                }
+
+            	printf("---------------------------------------------------\n\n");
+            	system("pause");
+            	system("cls");
+            	break; // Volta ao menu
+			}
+			else if(i=2){
+				system("cls");
+				printf("---------------------------------------------------\n\n");
+            	printf("COMPRA CONCLUÍDA.\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Nome: %s \n",nome);
+            	printf("CPF: %s \n\n", cpf);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Exposição: REI PELÉ\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	printf("Dia %s - Horario %dh\n\n", dia, hora);
+            	printf("---------------------------------------------------\n\n");
+            	printf("Preço:R$%.2f\n",total);
+            	printf("Método de pagamento: Cartão de crédito/débito\n\n");
+            	printf("---------------------------------------------------\n\n");
+            	
+            	for (int i = 0; i<quantidade;i++){
+                int randomNumber = rand() % 900000 + 100000;
+                printf("Ticket %d: %d\n\n", i + 1, randomNumber);
+                }
+            	printf("---------------------------------------------------\n\n");
+				system("pause");
+				system("cls");
+				break; // Volta ao menu
+			}
+			else{
+				printf("Opção inválida!");
+			}
+            return 0; // Motivo dos break retornarem ao menu
             }
         }
             break;
@@ -309,7 +374,7 @@ int main() {
             system("cls");
             break;
             
-            
+            // ERRO AO ESCOLHER OUTRA EXPOSIÇÃO
             default:
             printf("encontramos um erro na seleção de exposição!\n");
             printf("Provavelmente os ingressos para essa exposição ja expiraram.\n");
@@ -331,9 +396,9 @@ int main() {
                 system ("pause");
                 system("cls");
         }
+         
     } while(opcao != 4);
     
     return 0;
 }
-
           
