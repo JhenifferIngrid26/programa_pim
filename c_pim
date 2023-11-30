@@ -105,9 +105,9 @@ int main() {
         printf("\nDigite sua idade:");
         scanf("%s", idade);
         printf("\nDigite seu email: ");
-        scanf("%s", usuarios[totalUsuarios].email);
+        scanf("%s", email);
         
-        
+        strcpy(usuarios[totalUsuarios].email, email);
         
         //Entrada e Conferir se o CPF possui 11 caracteres, caso não tenha irá se repetir
             do {
@@ -116,35 +116,53 @@ int main() {
                 } 
 				while (!validarCPF(cpf));
                 strcpy(usuarios[totalUsuarios].cpf, cpf);
+            
+            //Entrada e Conferir se a senha possui 7 caracteres numéricos, caso não tenha irá se repetir
+            char senhaTemp[20];
+            do {
+                printf("\nDigite sua senha utilizando apenas números (minimo 7 dígitos):");
+                getPassword(senhaTemp, sizeof(senhaTemp));
+                } while (!validarSenha(senhaTemp));
                 
-                //Entrada e Conferir se a senha possui 7 caracteres numéricos, caso não tenha irá se repetir
-                char senhaTemp[20];
-                do {
-                    printf("\nDigite sua senha utilizando apenas números (minimo 7 dígitos):");
-                    getPassword(senhaTemp, sizeof(senhaTemp));
-                    } while (!validarSenha(senhaTemp));
-                    
-                //Conferir se a senha é a mesma
-                char confirmacaoSenha[20];
-                printf("\nConfirme sua senha: ");
-                getPassword(confirmacaoSenha, sizeof(confirmacaoSenha));
+            //Conferir se a senha é a mesma
+            char confirmacaoSenha[20];
+            printf("\nConfirme sua senha: ");
+            getPassword(confirmacaoSenha, sizeof(confirmacaoSenha));
 
-                if (strcmp(senhaTemp, confirmacaoSenha) == 0) {
-                    strcpy(usuarios[totalUsuarios].senha, senhaTemp);
-                    totalUsuarios++;
-                    printf("\n\n--------------------------");
-                    printf("\nConta criada com sucesso!\n");
-                    printf("--------------------------\n");
-                    system("pause");
-                    system("cls");
-                } else {
-                    printf("\n\nAs senhas nao coincidem!\n");
-                    printf("volte ao cadastro e tente novamente.\n\n");
-                    system("pause");
-                    system("cls");
-                    break;
-                }
+            if (strcmp(senhaTemp, confirmacaoSenha) == 0) {
+                strcpy(usuarios[totalUsuarios].senha, senhaTemp);
+                totalUsuarios++;
+                
+                printf("\n\n--------------------------");
+                printf("\nConta criada com sucesso!\n");
+                printf("--------------------------\n");
+                
+                //ABRINDO ARQUIVO CSV
+                FILE *arq = fopen("cadastros.csv", "a"); 
+            
+	            if (arq != NULL) {
+				    
+				    fprintf(arq,"%s;%s;%s;%s;%s\n",nome,idade,email,cpf,senhaTemp);
+				    
+				    fclose(arq);
+				}
+				
+				else {
+			        printf("Erro ao abrir o arquivo de cadastro.\n");
+			    }
+			    
+			    system("pause");
+                system("cls");
+                               
+            } else {
+                printf("\n\nAs senhas nao coincidem!\n");
+                printf("volte ao cadastro e tente novamente.\n\n");
+                system("pause");
+                system("cls");
                 break;
+            }
+
+            break;
             
         //VERIFICAÇÃO DE DADOS PARA LOGIN
         case 2:
@@ -234,7 +252,7 @@ int main() {
             printf("2. CARTÃO DE CRÉDITO/DÉBITO\n");
             scanf("%d", &i);
             
-            if(i=1){
+            if(i==1){
             	system("cls");
             	printf("---------------------------------------------------\n\n");
             	printf("COMPRA CONCLUÍDA.\n\n");
@@ -250,17 +268,40 @@ int main() {
             	printf("Método de pagamento: PIX\n\n");
             	printf("---------------------------------------------------\n\n");
             	
-            	for (int i = 0; i<quantidade;i++){
-                int randomNumber = rand() % 900000 + 100000;
+            	int i, randomNumber;
+            	
+            	for (i = 0; i<quantidade;i++){
+                randomNumber = rand() % 900000 + 100000;
                 printf("Ticket %d: %d\n\n", i + 1, randomNumber);
                 }
-
             	printf("---------------------------------------------------\n\n");
-            	system("pause");
-            	system("cls");
+            	
+            	//Abrindo CSV dos tickets
+            	FILE *tick = fopen("tickets.csv", "a+");
+            
+	            if (tick != NULL) {
+	            	
+	            	fprintf(tick,"%s;",cpf);
+				    
+				    for(i=0;i<quantidade;i++){
+						fprintf(tick,"%d",randomNumber);
+						if (i!= quantidade-1) fprintf(tick,";");
+						else  fprintf(tick,"\n");
+					}			
+				    
+				    fclose(tick);
+				}
+				
+				else {
+			        printf("Erro ao abrir o arquivo de cadastro.\n");
+			    }
+            	
+            	
+				system("pause");
+				system("cls");
             	break; // Volta ao menu
 			}
-			else if(i=2){
+			else if(i==2){
 				system("cls");
 				printf("---------------------------------------------------\n\n");
             	printf("COMPRA CONCLUÍDA.\n\n");
@@ -276,11 +317,34 @@ int main() {
             	printf("Método de pagamento: Cartão de crédito/débito\n\n");
             	printf("---------------------------------------------------\n\n");
             	
-            	for (int i = 0; i<quantidade;i++){
-                int randomNumber = rand() % 900000 + 100000;
+            	int i, randomNumber;
+            	
+            	for (i = 0; i<quantidade;i++){
+                randomNumber = rand() % 900000 + 100000;
                 printf("Ticket %d: %d\n\n", i + 1, randomNumber);
                 }
             	printf("---------------------------------------------------\n\n");
+            	
+            	FILE *tick = fopen("tickets.csv", "a+");
+            
+	            if (tick != NULL) {
+	            	
+	            	fprintf(tick,"%s;",cpf);
+				    
+				    for(i=0;i<quantidade;i++){
+						fprintf(tick,"%d",randomNumber);
+						if (i!= quantidade-1) fprintf(tick,";");
+						else  fprintf(tick,"\n");
+					}			
+				    
+				    fclose(tick);
+				}
+				
+				else {
+			        printf("Erro ao abrir o arquivo de cadastro.\n");
+			    }
+            	
+            	
 				system("pause");
 				system("cls");
 				break; // Volta ao menu
@@ -311,7 +375,7 @@ int main() {
                 printf("1. PIX \n");
                 printf("2. CARTÃO DE CRÉDITO/DÉBITO\n");
                 scanf("%d", &i);
-                if(i=1){
+                if(i==1){
             	system("cls");
             	printf("---------------------------------------------------\n\n");
             	printf("COMPRA CONCLUÍDA.\n\n");
@@ -327,17 +391,39 @@ int main() {
             	printf("Método de pagamento: PIX\n\n");
             	printf("---------------------------------------------------\n\n");
             	
-            	for (int i = 0; i<quantidade;i++){
-                int randomNumber = rand() % 900000 + 100000;
+            	int i, randomNumber;
+            	
+            	for (i = 0; i<quantidade;i++){
+                randomNumber = rand() % 900000 + 100000;
                 printf("Ticket %d: %d\n\n", i + 1, randomNumber);
                 }
-
             	printf("---------------------------------------------------\n\n");
-            	system("pause");
-            	system("cls");
+            	
+            	FILE *tick = fopen("tickets.csv", "a+");
+            
+	            if (tick != NULL) {
+	            	
+	            	fprintf(tick,"%s;",cpf);
+				    
+				    for(i=0;i<quantidade;i++){
+						fprintf(tick,"%d",randomNumber);
+						if (i!= quantidade-1) fprintf(tick,";");
+						else  fprintf(tick,"\n");
+					}			
+				    
+				    fclose(tick);
+				}
+				
+				else {
+			        printf("Erro ao abrir o arquivo de cadastro.\n");
+			    }
+            	
+            	
+				system("pause");
+				system("cls");
             	break; // Volta ao menu
 			}
-			else if(i=2){
+			else if(i==2){
 				system("cls");
 				printf("---------------------------------------------------\n\n");
             	printf("COMPRA CONCLUÍDA.\n\n");
@@ -353,11 +439,34 @@ int main() {
             	printf("Método de pagamento: Cartão de crédito/débito\n\n");
             	printf("---------------------------------------------------\n\n");
             	
-            	for (int i = 0; i<quantidade;i++){
-                int randomNumber = rand() % 900000 + 100000;
+            	int i, randomNumber;
+            	
+            	for (i = 0; i<quantidade;i++){
+                randomNumber = rand() % 900000 + 100000;
                 printf("Ticket %d: %d\n\n", i + 1, randomNumber);
                 }
             	printf("---------------------------------------------------\n\n");
+            	
+            	FILE *tick = fopen("tickets.csv", "a+");
+            
+	            if (tick != NULL) {
+	            	
+	            	fprintf(tick,"%s;",cpf);
+				    
+				    for(i=0;i<quantidade;i++){
+						fprintf(tick,"%d",randomNumber);
+						if (i!= quantidade-1) fprintf(tick,";");
+						else  fprintf(tick,"\n");
+					}			
+				    
+				    fclose(tick);
+				}
+				
+				else {
+			        printf("Erro ao abrir o arquivo de cadastro.\n");
+			    }
+            	
+            	
 				system("pause");
 				system("cls");
 				break; // Volta ao menu
@@ -401,4 +510,3 @@ int main() {
     
     return 0;
 }
-          
